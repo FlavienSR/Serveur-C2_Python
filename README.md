@@ -37,7 +37,8 @@ Configurez `cible.py` avec les paramètres appropriés pour qu'il puisse se conn
 ## Exécution
 
 ### Démarrage du Serveur
-Pour démarrer le serveur C2, exécutez le script `server.py`.
+Pour démarrer le serveur C2, exécutez le script `server.py`. 
+**Il faut démarrer le script serveur avant les scripts client !**
 ```bash
 python3 server.py
 ```
