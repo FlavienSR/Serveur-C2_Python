@@ -24,6 +24,10 @@ Clonez le dépôt ou téléchargez les fichiers `server.py` et `cible.py`:
 git clone git@github.com:FlavienSR/Serveur-C2_Python.git
 cd Serveur-C2_Python
 ```
+Puis installez les librairies nécessaires avec :
+```bash
+pip install -r requirements.txt
+```
 
 ## Configuration
 Cette section explique comment configurer le serveur et les clients pour un fonctionnement optimal.

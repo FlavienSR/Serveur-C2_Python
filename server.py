@@ -2,6 +2,8 @@ import socket
 import threading
 import sys
 import time
+from rich.table import Table
+from rich.console import Console
 
 class C2Server:
     def __init__(self, host='0.0.0.0', port=4444):
@@ -25,7 +27,7 @@ class C2Server:
         threading.Thread(target=self.menu).start() # mise en place du menu constant
         self.server_socket.bind((self.host, self.port))
         self.server_socket.listen(3)
-        print('\nEn écoute...')
+        print('\nEn écoute...\n')
         while True:
             try:
                 connexion, adresse = self.server_socket.accept()
@@ -37,25 +39,27 @@ class C2Server:
     def menu(self):
         while self.flag:
             time.sleep(0.1) # pour laisser le temps à chaque boucle
-            print("")
-            print("-"*72)
-            print("Menu du serveur C2 - Entrez le chiffre correspondant à l'action voulue :\n")
-            print("1 : Envoyer une commande à tous les clients")
-            print("2 : Envoyer une commande à un seul client")
-            print("3 : Voir les clients connectés")
-            print("4 : Quitter")
-            print("-"*72)
-            choix = input("\nEntrez le chiffre : ")
+            menu = Table(title="Menu du Serveur C2")
+            menu.add_column("N° du choix", justify="center", style="red")
+            menu.add_column("Description", justify="left", style="green")
+            menu.add_row("1", "Envoyer une commande à tous les clients")
+            menu.add_row("2", "Envoyer une commande à un seul client")
+            menu.add_row("3", "Voir les clients connectés")
+            menu.add_row("4", "Quitter")
+            console = Console()
+            console.print(menu)
+            choix = input("\nEntrez votre choix : ")
+            print("\n")
             if choix == "1":
                 if not self.connexions:
-                    print("\nIl n'y a aucune connexion active pour le moment.\n")
+                    print("Il n'y a aucune connexion active pour le moment.\n")
                 else:
                     for i in range(len(self.connexions)):
-                        self.liste.append(i) # on mets chaque machine dans la liste à controler
+                        self.liste.append(i) # on met chaque machine dans la liste à controler
                     self.echange(self.liste)
             elif choix == "2":
                 if not self.connexions:
-                    print("\nIl n'y a aucune machine active sur le serveur pour le moment.\n")
+                    print("Il n'y a aucune machine active sur le serveur pour le moment.\n")
                 else:
                     self.lister()
                     while self.flag:
@@ -71,7 +75,7 @@ class C2Server:
                     self.echange([self.machine-1])
             elif choix == "3":
                 self.lister()
-                print("\n"," "*24,"Retour au menu...")
+                print("\nRetour au menu...\n")
             elif choix == "4":
                 self.flag = False # arrêt de la boucle du menu
                 for conn in self.connexions:
@@ -81,12 +85,15 @@ class C2Server:
                 sys.exit()
 
     def lister(self):
-        print("\n"," "*13,"Liste des connexions actives sur le serveur :\n")
-        if not self.connexions:
-            print("Il n'y a aucune connexion active pour le moment.")
-        else:
-            for i in range(len(self.connexions)):
-                print("- Adresse n°",i+1,":",self.connexions[i].getpeername()) # .getpeername() -> prend l'adresse et le port
+        liste = Table(title="Connexions actives")
+        liste.add_column("N° de la connexion", justify="center", style="cyan")
+        liste.add_column("Adresse IP",justify="center", style="magenta")
+        liste.add_column("Port", justify="right", style="green")
+        for i in range(len(self.connexions)):
+            ip, port = self.connexions[i].getpeername() # .getpeername() -> prend l'adresse et le port
+            liste.add_row(str(i+1), str(ip), str(port))
+        console = Console()
+        console.print(liste)
 
     def echange(self,numeros):
         while self.commande != "stop" and self.commande != "exit":

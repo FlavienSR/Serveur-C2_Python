@@ -16,7 +16,7 @@ class Cible:
       while self.flag:
         cmd = self.socket.recv(1024).decode().strip()
         if cmd == "exit":
-          self.send("Déconnection\n")
+          self.send("Déconnexion\n")
           self.flag = False
         elif cmd == "stop":
           self.send("Arrêt des commandes\n")
