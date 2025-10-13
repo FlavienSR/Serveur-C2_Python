@@ -81,6 +81,7 @@ class C2Server:
                 for conn in self.connexions:
                     conn.send("exit".encode())
                     conn.close()
+                self.server_socket.shutdown(socket.SHUT_RDWR)
                 self.server_socket.close()
                 sys.exit()
 
